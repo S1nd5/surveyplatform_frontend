@@ -1,5 +1,3 @@
-import logo from './logo.svg';
-import './App.css';
 import React, { useState, useEffect } from 'react';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
@@ -8,18 +6,26 @@ import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import Button from '@mui/material/Button';
 
+import './App.css';
+
 function App() {
 
   const [test, setTest] = useState([]);
-  const [car, setCar] = useState('...');
+  const [car, setCar] = useState('');
+  const [selectedcar, setSelectedCar] = useState('...');
+  const [isAboutVisible, setVisible] = useState(false
+  );
 
   const fetchTestData = () => {
     fetch('https://carstockrest.herokuapp.com/cars').then(async response => {
 
       try {
         const data = await response.json()
-        setTest(data._embedded.cars);
-        console.log(data._embedded.cars);
+        let array = []
+        array.push(data._embedded.cars[0])
+        array.push(data._embedded.cars[3])
+        array.push(data._embedded.cars[4])
+        setTest(array);
       } catch (error) {
         console.error(error)
       }
@@ -31,34 +37,40 @@ function App() {
     fetchTestData();
   }, []);
 
-  const printTest = (event) => {
+  const testInput = (event) => {
+    setSelectedCar(car);
+    setVisible(true);
 
-    console.log(car);
-
+    fetch('https://carstockrest.herokuapp.com/cars', { method: 'POST', headers: { 'Content-type': 'application/json' }, body: JSON.stringify({brand: car, model: "fav", color: "", year: "", fuel: "", price: ""}) })
+      .catch(error => console.error(error))
   }
 
   const handleChange = (event) => {
-    console.log(event.target.value);
+    setVisible(false);
     setCar(event.target.value);
   };
 
   return (
+
     <div className="App" style={{ marginTop: 100 }}>
+      <h2>Survey demo 0.1 Front End</h2>
+      <p>(Source: HTTP GET from /cars)</p>
       <FormControl component="fieldset">
-      <FormLabel component="legend">Car</FormLabel>
-      <RadioGroup
-        aria-label="car"
-        name="controlled-radio-buttons-group"
-        value={car}
-        onChange={handleChange}
-      >
-        <FormControlLabel value={test[0].brand} control={<Radio />} label={test[0].brand} />
-        <FormControlLabel value={test[3].brand} control={<Radio />} label={test[3].brand} />
-        <FormControlLabel value={test[4].brand} control={<Radio />} label={test[4].brand} />
-        <Button variant="contained" onClick={printTest}>Submit</Button>
+        <FormLabel component="legend">Favorite car</FormLabel>
+        <RadioGroup
+          aria-label="car"
+          name="controlled-radio-buttons-group"
+          value={car}
+          onChange={handleChange}
+        >
+          {test.map((item, key) => (
+            <FormControlLabel key={item.brand} value={item.brand} control={<Radio />} label={item.brand} />
+          ))}
+          <Button variant="contained" onClick={testInput}>Submit</Button>
         </RadioGroup>
-    </FormControl>
-      <h6>Based on our survey, your favorite car is: {car}</h6>
+      </FormControl>
+      <h5>Based on our survey, your favorite car is: {selectedcar}</h5>
+      {isAboutVisible ? <i>POST sended.</i> : null}
     </div>
   );
 }
