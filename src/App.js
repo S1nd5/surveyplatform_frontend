@@ -17,7 +17,7 @@ function App() {
   const [error, setError] = useState(false);
 
   const fetchTestData = () => {
-    fetch('http://surveybackend-env.eba-8pzkmxef.eu-central-1.elasticbeanstalk.com/surveys').then(async response => {
+    fetch('https://surveybackend-env.eba-8pzkmxef.eu-central-1.elasticbeanstalk.com/surveys').then(async response => {
 
       try {
         const data = await response.json()
