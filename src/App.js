@@ -10,22 +10,28 @@ import './App.css';
 
 function App() {
 
-  const [test, setTest] = useState([]);
-  const [car, setCar] = useState('');
-  const [selectedcar, setSelectedCar] = useState('...');
-  const [isAboutVisible, setVisible] = useState(false
-  );
+  const [ques, setQues] = useState([]);
+  const [ans, setAns] = useState([]);
+  const [selectedAns, setSelectedAns] = useState('');
+  const [isVisible, setVisible] = useState(false);
+  const [error, setError] = useState(false);
 
   const fetchTestData = () => {
-    fetch('https://carstockrest.herokuapp.com/cars').then(async response => {
+    fetch('http://surveybackend-env.eba-8pzkmxef.eu-central-1.elasticbeanstalk.com/surveys').then(async response => {
 
       try {
         const data = await response.json()
-        let array = []
-        array.push(data._embedded.cars[0])
-        array.push(data._embedded.cars[3])
-        array.push(data._embedded.cars[4])
-        setTest(array);
+        let quesArray = []
+        let ansArray = []
+
+        quesArray.push(data[0].questions[0].question);
+        setQues(quesArray);
+
+        ansArray.push(data[0].questions[0].opt1)
+        ansArray.push(data[0].questions[0].opt2)
+        ansArray.push(data[0].questions[0].opt3)
+        setAns(ansArray);
+
       } catch (error) {
         console.error(error)
       }
@@ -37,40 +43,45 @@ function App() {
     fetchTestData();
   }, []);
 
-  const testInput = (event) => {
-    setSelectedCar(car);
-    setVisible(true);
+  const postData = (event) => {
+    if (selectedAns != '...') {
+      setVisible(true);
+    } else {
+      setError(true);
+    }
 
-    fetch('https://carstockrest.herokuapp.com/cars', { method: 'POST', headers: { 'Content-type': 'application/json' }, body: JSON.stringify({brand: car, model: "fav", color: "", year: "", fuel: "", price: ""}) })
-      .catch(error => console.error(error))
+    /*fetch('http://surveybackend-env.eba-8pzkmxef.eu-central-1.elasticbeanstalk.com/answer', { method: 'POST', headers: { 'Content-type': 'application/json' }, body: JSON.stringify(SISÄLTÖ) })
+      .catch(error => console.error(error))*/
   }
 
   const handleChange = (event) => {
     setVisible(false);
-    setCar(event.target.value);
+    setError(false);
+    setSelectedAns(event.target.value);
   };
 
   return (
 
     <div className="App" style={{ marginTop: 100 }}>
-      <h2>Survey demo 0.1 Front End</h2>
-      <p>(Source: HTTP GET from /cars)</p>
+      <h2>Survey demo 0.2 Front End</h2>
+      <p>(Source: HTTP GET from /surveys)</p>
       <FormControl component="fieldset">
-        <FormLabel component="legend">Favorite car</FormLabel>
+        <FormLabel component="legend">{ques}</FormLabel>
         <RadioGroup
           aria-label="car"
           name="controlled-radio-buttons-group"
-          value={car}
           onChange={handleChange}
+
         >
-          {test.map((item, key) => (
-            <FormControlLabel key={item.brand} value={item.brand} control={<Radio />} label={item.brand} />
+          {ans.map((item, key) => (
+
+            <FormControlLabel key={key} value={item} control={<Radio />} label={item} />
           ))}
-          <Button variant="contained" onClick={testInput}>Submit</Button>
+          <Button variant="contained" onClick={postData}>Submit</Button>
         </RadioGroup>
       </FormControl>
-      <h5>Based on our survey, your favorite car is: {selectedcar}</h5>
-      {isAboutVisible ? <i>POST sended.</i> : null}
+      <div style={{ marginTop: 20 }}>{isVisible ? <i>POST sended.</i> : null}</div>
+      <div style={{ marginTop: 20, color: "red" }}>{error ? <b>Error</b> : null}</div>
     </div>
   );
 }
