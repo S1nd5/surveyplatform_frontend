@@ -4,6 +4,6 @@ import App from './App';
 
 test('renders header', () => {
   render(<App />);
-  const linkElement = screen.getByText(/Survey demo 0.2 Front End/i);
+  const linkElement = screen.getByText(/Survey demo 0.1.0 Front End/i);
   expect(linkElement).toBeInTheDocument();
 });
