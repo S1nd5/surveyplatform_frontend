@@ -30,8 +30,8 @@ function Survey() {
                 quesArray.push(data[0].questions[0].question);
                 setQues(quesArray);
 
-                setSurveyId(data[0].s_id);
-                setquestionId(data[0].questions[0].q_id);
+                setSurveyId(data[0].s_id.toString());
+                setquestionId(data[0].questions[0].q_id.toString());
 
                 ansArray.push(data[0].questions[0].opt1)
                 ansArray.push(data[0].questions[0].opt2)
