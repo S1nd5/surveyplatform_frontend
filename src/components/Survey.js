@@ -36,7 +36,7 @@ function Survey() {
                 ansArray.push(data[0].questions[0].opt1)
                 ansArray.push(data[0].questions[0].opt2)
                 ansArray.push(data[0].questions[0].opt3)
-                ansArray.push(data[0].questions[0].opt4)
+              
                 setAns(ansArray);
 
             } catch (error) {
