@@ -19,8 +19,11 @@ function Survey() {
     const [isVisible, setVisible] = useState(false);
     const [error, setError] = useState(false);
 
-    let quesArray = []
+    let dataArray = []
     let ansArray = []
+    let resultsArray = []
+    let surveyIdArray = []
+    let questionIdArray = []
 
     const fetchTestData = () => {
         fetch('https://json.awsproject.link/surveys').then(async response => {
@@ -30,13 +33,13 @@ function Survey() {
 
                 for (let i = 0; i < data.length; i++) {
 
-                    quesArray.push(data[i].questions[0].question);
+                    dataArray.push(data[i]);
 
                 }
 
-                console.log(data[0].questions[0].question);
+                console.log(dataArray[0]);
 
-                setQues(quesArray);
+                setQues(dataArray);
 
                 setSurveyId(data[0].questions[0].q_id.toString());
                 setquestionId(data[0].questions[0].q_id.toString());
@@ -71,7 +74,9 @@ function Survey() {
 
     const handleChange = (event) => {
 
-        //console.log(ques.indexOf(event.target.name));
+        console.log(ques.indexOf(event.target.name));
+
+        console.log(surveyId.indexOf());
 
         setVisible(false);
         setError(false);
@@ -86,7 +91,7 @@ function Survey() {
             {ques.map((item, key) => (
                 <div style={{ marginTop: 30 }}>
                     <FormControl component="fieldset">
-                        <FormLabel component="legend">{item}</FormLabel>
+                        <FormLabel component="legend">{item.questions[0].question}</FormLabel>
                         <RadioGroup
                             aria-label="car"
                             name={item}
@@ -106,6 +111,7 @@ function Survey() {
 
             <div style={{ marginTop: 20 }}>{isVisible ? <i>POST sended.</i> : null}</div>
             <div style={{ marginTop: 20, color: "red" }}>{error ? <b>Error</b> : null}</div>
+            
         </div>
     );
 }
