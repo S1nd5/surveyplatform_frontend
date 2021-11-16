@@ -23,31 +23,27 @@ function Survey() {
     let ansArray = []
 
     const fetchTestData = () => {
-        fetch('https://json.awsproject.link/questions').then(async response => {
+        fetch('https://json.awsproject.link/surveys').then(async response => {
 
             try {
                 const data = await response.json()
 
-                console.log(data[0]);
-
                 for (let i = 0; i < data.length; i++) {
 
-                    quesArray.push(data[i].question);
+                    quesArray.push(data[i].questions[0].question);
 
                 }
 
-                console.log(quesArray.indexOf('Mikä on elämän tarkoitus?'));
+                console.log(data[0].questions[0].question);
 
                 setQues(quesArray);
 
-                console.log(ques);
-
-                setSurveyId("1");
+                setSurveyId(data[0].questions[0].q_id.toString());
                 setquestionId(data[0].questions[0].q_id.toString());
 
-                ansArray.push(data[0].opt1)
-                ansArray.push(data[0].opt2)
-                ansArray.push(data[0].opt3)
+                ansArray.push(data[0].questions[0].opt1)
+                ansArray.push(data[0].questions[0].opt2)
+                ansArray.push(data[0].questions[0].opt3)
 
                 setAns(ansArray);
 
@@ -75,9 +71,7 @@ function Survey() {
 
     const handleChange = (event) => {
 
-        console.log(ques.indexOf(event.target.name));
-
-        
+        //console.log(ques.indexOf(event.target.name));
 
         setVisible(false);
         setError(false);
