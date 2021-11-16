@@ -19,24 +19,36 @@ function Survey() {
     const [isVisible, setVisible] = useState(false);
     const [error, setError] = useState(false);
 
+    let quesArray = []
+    let ansArray = []
+
     const fetchTestData = () => {
-        fetch('https://json.awsproject.link/surveys').then(async response => {
+        fetch('https://json.awsproject.link/questions').then(async response => {
 
             try {
                 const data = await response.json()
-                let quesArray = []
-                let ansArray = []
 
-                quesArray.push(data[0].questions[0].question);
+                console.log(data[0]);
+
+                for (let i = 0; i < data.length; i++) {
+
+                    quesArray.push(data[i].question);
+
+                }
+
+                console.log(quesArray.indexOf('Mikä on elämän tarkoitus?'));
+
                 setQues(quesArray);
 
-                setSurveyId(data[0].s_id.toString());
+                console.log(ques);
+
+                setSurveyId("1");
                 setquestionId(data[0].questions[0].q_id.toString());
 
-                ansArray.push(data[0].questions[0].opt1)
-                ansArray.push(data[0].questions[0].opt2)
-                ansArray.push(data[0].questions[0].opt3)
-              
+                ansArray.push(data[0].opt1)
+                ansArray.push(data[0].opt2)
+                ansArray.push(data[0].opt3)
+
                 setAns(ansArray);
 
             } catch (error) {
@@ -62,6 +74,11 @@ function Survey() {
     }
 
     const handleChange = (event) => {
+
+        console.log(ques.indexOf(event.target.name));
+
+        
+
         setVisible(false);
         setError(false);
         setSelectedAns(event.target.value);
@@ -70,23 +87,29 @@ function Survey() {
     return (
 
         <div>
-            <h2>Survey demo 0.1.0 Front End</h2>
+            <h2>Survey demo 1.0.0 Front End</h2>
             <p>(Source: HTTP GET from /surveys)</p>
-            <FormControl component="fieldset">
-                <FormLabel component="legend">{ques}</FormLabel>
-                <RadioGroup
-                    aria-label="car"
-                    name="controlled-radio-buttons-group"
-                    onChange={handleChange}
+            {ques.map((item, key) => (
+                <div style={{ marginTop: 30 }}>
+                    <FormControl component="fieldset">
+                        <FormLabel component="legend">{item}</FormLabel>
+                        <RadioGroup
+                            aria-label="car"
+                            name={item}
+                            onChange={handleChange}
 
-                >
-                    {ans.map((item, key) => (
+                        >
 
-                        <FormControlLabel key={key} value={item} control={<Radio />} label={item} />
-                    ))}
-                    <Button variant="contained" onClick={postData}>Submit</Button>
-                </RadioGroup>
-            </FormControl>
+                            {ans.map((item, key) => (
+
+                                <FormControlLabel key={key} value={item} control={<Radio />} label={item} />
+                            ))}
+                            <Button variant="contained" onClick={postData}>Submit</Button>
+                        </RadioGroup>
+                    </FormControl>
+                </div>
+            ))}
+
             <div style={{ marginTop: 20 }}>{isVisible ? <i>POST sended.</i> : null}</div>
             <div style={{ marginTop: 20, color: "red" }}>{error ? <b>Error</b> : null}</div>
         </div>
