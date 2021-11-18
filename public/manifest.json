@@ -1,7 +1,7 @@
 {
-  "short_name": "Survey App",
-  "name": "Surveyplatform Application",
-  "description": "Different kinds of surveys, which are taken to make pollings.",
+  "short_name": "Survey App Admin",
+  "name": "Surveyplatform Application Administrator tools",
+  "description": "Tools to execute Administrator taskes on Survey App.",
   "icons": [
     {
       "src": "favicon.ico",
