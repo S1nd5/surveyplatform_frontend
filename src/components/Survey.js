@@ -70,7 +70,7 @@ function Survey(props) {
 
         if (surveysLength > surveyId) {
 
-            window.location.href = "https://dev.json.awsproject.link/Survey%20" + id;
+            window.location.href = "https://dev.awsproject.link/Survey%20" + id;
 
         } else {
 
@@ -140,8 +140,8 @@ function Survey(props) {
         <div>
             <h1>Survey {surveyId}</h1>
             <h2>Demo 1.0.0</h2>
-            <Button variant="contained" style={{ margin: '10px' }} class="btn btn-primary" onClick={nextPage}>Next</Button>
             <Link style={{ color: 'white' }} to="/"><button variant="contained" style={{ margin: '10px' }} class="btn btn-primary">Home</button></Link>
+            <Button variant="contained" style={{ margin: '10px' }} class="btn btn-primary" onClick={nextPage}>Next</Button>
             {questions.map((item, key) => (
                 <div style={{ marginTop: 30 }}>
                     <FormControl component="fieldset">
