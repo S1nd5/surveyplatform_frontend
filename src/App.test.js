@@ -1,9 +1,9 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import App from './App';
+import Home from './components/Home';
 
 test('renders header', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/Survey demo 0.1.0 Front End/i);
-  expect(linkElement).toBeInTheDocument();
+  render(<Home />);
+  const headerElement = screen.getByText(/Welcome to SurveyHub!/i);
+  expect(headerElement).toBeInTheDocument();
 });

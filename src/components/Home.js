@@ -42,7 +42,7 @@ function Home() {
 
     <div>
       <h1>Welcome to SurveyHub!</h1>
-      <Box p={1}>
+      <Box>
         <FormControl component="fieldset" margin='dense'>
           <FormLabel
             component="legend">Surveys
