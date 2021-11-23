@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -10,8 +10,11 @@ function AddQuestion(props) {
 
     // Dialog, which is used to add new question to database
 
-    const [open, setOpen] = React.useState(false);
-    const [question, setQuestion] = React.useState({ s_id: "", opt1: "", opt2: "", opt3: "", opt4: "Ehkä", question: "" });
+    const [open, setOpen] = useState(false);
+    const [question, setQuestion] = useState({ s_id: "", opt1: "", opt2: "", opt3: "", opt4: "Ehkä", question: "" });
+    const [choices, setChoices] = useState([]);
+
+    let dataArray = [];
 
     const handleClickOpen = () => {
 
@@ -31,8 +34,6 @@ function AddQuestion(props) {
 
         } else {
 
-console.log({ survey: { s_id: question.s_id }, opt1: question.opt1, opt2: question.opt2, opt3: question.opt3, opt4: question.opt4, question: question.question });
-
             props.addQuestion({ survey: { s_id: question.s_id }, opt1: question.opt1, opt2: question.opt2, opt3: question.opt3, opt4: question.opt4, question: question.question });
             handleClose();
         }
@@ -40,8 +41,47 @@ console.log({ survey: { s_id: question.s_id }, opt1: question.opt1, opt2: questi
 
     const inputChanged = e => {
 
-        setQuestion({ ...question, [e.target.name]: e.target.value })
+        if (e.target.name == "s_id") {
+
+            setQuestion({ ...question, [e.target.name]: e.target.value.toString().split("(")[1].split(")")[0] })
+
+        } else {
+
+            setQuestion({ ...question, [e.target.name]: e.target.value })
+        }
     }
+
+    // Data for the select element
+
+    const fetchData = () => {
+        fetch('https://json.awsproject.link/surveys').then(async response => {
+
+            try {
+
+                const data = await response.json()
+
+                for (let i = 0; i < data.length; i++) {
+
+                    console.log(data[0].name + " (" + data[0].s_id + ")");
+                    dataArray.push(data[0].name + " (" + data[0].s_id + ")");
+                }
+
+                console.log(dataArray);
+
+                setChoices(dataArray);
+
+            } catch (error) {
+                console.error(error)
+            }
+        })
+    }
+
+    useEffect(() => {
+
+        fetchData();
+        // eslint-disable-next-line
+    }, []);
+
 
     return (
         <div>
@@ -51,17 +91,12 @@ console.log({ survey: { s_id: question.s_id }, opt1: question.opt1, opt2: questi
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>Add question</DialogTitle>
                 <DialogContent>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        id="s_id"
-                        name="s_id"
-                        onChange={inputChanged}
-                        label="Survey Id"
-                        fullWidth
-                        variant="standard"
-                        required
-                    />
+                    <select id="s_id" name="s_id" variant="standard" class="form-select" aria-label="Default select example" onChange={inputChanged}>
+                        <option selected>Survey name</option>
+                        {choices.map((item, key) => (
+                            <option value={item} key={key}>{item}</option>
+                        ))}
+                    </select>
                     <TextField
                         margin="dense"
                         id="question"

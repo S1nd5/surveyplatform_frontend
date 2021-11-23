@@ -19,12 +19,12 @@ function Surveys() {
     const columns = [
         {
             Header: 'Survey name',
-            maxWidth: '400',
+            maxWidth: '580',
             accessor: 'name'
         },
         {
             Header: 'Survey Id',
-            maxWidth: '80',
+            maxWidth: '100',
             accessor: 's_id'
         },
         {
@@ -97,7 +97,7 @@ function Surveys() {
                 <Button variant="contained" style={{ margin: '10px', width: 200, height: 100, fontSize: 30, paddingTop: 20, borderRadius: 10 }} class="btn btn-secondary" href="/questions">Questions</Button>
             </div>
 
-            <div style={{ backgroundColor: 'white', width: 600, marginLeft: 'auto', marginRight: 'auto', borderRadius: 10 }}>
+            <div style={{ backgroundColor: 'white', width: 800, marginLeft: 'auto', marginRight: 'auto', borderRadius: 10 }}>
                 <h1 style={{ margin: 10 }}>Surveys</h1>
                 <AddSurvey addSurvey={addSurvey} />
                 <ReactTable filterable={true} defaultPageSize={10}
