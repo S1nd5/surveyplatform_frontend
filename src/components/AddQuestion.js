@@ -41,7 +41,7 @@ function AddQuestion(props) {
 
     const inputChanged = e => {
 
-        if (e.target.name == "s_id") {
+        if (e.target.name === "s_id") {
 
             setQuestion({ ...question, [e.target.name]: e.target.value.toString().split("(")[1].split(")")[0] })
 
