@@ -5,7 +5,13 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import Button from '@mui/material/Button';
+import LinearProgress from "@mui/material/LinearProgress";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
 import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
+
+import '../css/bootstrap.min.css';
 
 function Survey(props) {
 
@@ -14,14 +20,16 @@ function Survey(props) {
 
     const [surveyId, setSurveyId] = useState(props.match.params.surveyId);
     const [ansNeeded, setAnsNeeded] = useState(0);
-    const [surveysLength, setSurveysLength] = useState();
+    const [surveyLength, setSurveyLength] = useState();
 
     const [ansMap, setAnsMap] = useState([]);
     const [selectedAns, setSelectedAns] = useState([]);
 
     const [isVisible, setVisible] = useState(false);
+    const [progValue, setProgValue] = useState(0);
 
-    let dataArray = [];
+    const [usedAnswer, setUsedAnswer] = useState([]);
+
     let ansArray = [];
     let quesArray = [];
     let filteredData = [];
@@ -31,20 +39,24 @@ function Survey(props) {
         fetch('https://json.awsproject.link/surveys').then(async response => {
 
             try {
+
+                //Whole survey data
                 const data = await response.json()
 
-                setSurveysLength(data[surveyId - 1].questions.length);
+                //How many questions there is in this survey
+                setSurveyLength(data[surveyId - 1].questions.length);
 
-                dataArray.push(data[surveyId - 1]);
-
+                //Saving surveyId
                 setSurveyId(data[surveyId - 1].s_id);
 
+                //Radiobutton values
                 ansArray.push(data[0].questions[0].opt1)
                 ansArray.push(data[0].questions[0].opt2)
                 ansArray.push(data[0].questions[0].opt3)
 
                 setAnsMap(ansArray);
 
+                //Question values
                 for (let i = 0; i < data[surveyId - 1].questions.length; i++) {
 
                     quesArray.push(data[surveyId - 1].questions[i].question);
@@ -64,11 +76,12 @@ function Survey(props) {
         // eslint-disable-next-line
     }, []);
 
+    //Change to next survey
     const nextPage = () => {
 
         const id = parseInt(props.match.params.surveyId) + 1;
 
-        if (surveysLength > surveyId) {
+        if (surveyLength > surveyId) {
 
             window.location.href = "https://dev.awsproject.link/Survey%20" + id;
 
@@ -78,13 +91,14 @@ function Survey(props) {
         }
     }
 
-
+    //Send post request via rest
     const postData = () => {
 
-        if (ansNeeded >= surveysLength) {
+        //Does the answer include everything?
+        if (ansNeeded >= surveyLength) {
+            if (respondent.toString().includes(" ") && respondent.toString().split(" ")[1] !== "") {
 
-            if (respondent.toString().includes(" ")) {
-
+                //Answers in reverse order, so we get the latest choices
                 let chars = [];
                 selectedAns.reverse();
 
@@ -100,6 +114,8 @@ function Survey(props) {
                 let data = [];
 
                 filteredData.reverse();
+
+                //Let's assemble data needed for post
 
                 for (let i = 0; i < filteredData.length; i++) {
 
@@ -121,23 +137,86 @@ function Survey(props) {
         }
     }
 
+    //React (pun intended) to changes in radiobutton data
+
     const handleChange = (event) => {
 
-        setAnsNeeded(ansNeeded + 1)
+        valueAdder(event.target.name);
+
+        setAnsNeeded(ansNeeded + 1);
 
         let answer = JSON.parse('{"Q' + (questions.indexOf(event.target.name) + 1).toString() + '":"' + event.target.value + '"}');
 
         setSelectedAns(oldArray => [...oldArray, answer]);
-    };
+    }
+
+    //Change progress bar %
+
+    const valueAdder = (value) => {
+
+        if (value === 100 / (surveyLength + 1)) {
+
+            setProgValue(progValue - value);
+
+        } else {
+
+            const even = (element) => element === value;
+
+            setUsedAnswer(oldArray => [...oldArray, value])
+
+            if (usedAnswer.some(even) === false && progValue !== 100) {
+
+                setProgValue(progValue + 100 / (surveyLength + 1));
+            }
+        }
+    }
+
+    //React to changes in respondent data
 
     const handleRespondent = (event) => {
 
         setRespondent(event.target.value)
+
+        if (event.target.value.split(" ")[1] !== "" && event.target.value.toString().length > 2) {
+            // eslint-disable-next-line
+            if (respondent !== "" && respondent.includes(" ") && 100 / (surveyLength + 1) + progValue === 100 || progValue === 0 && progValue < 100 / (surveyLength + 1) && respondent !== "" && respondent.includes(" ")) {
+
+                valueAdder(event.target.value);
+            }
+            // eslint-disable-next-line
+            if (!event.target.value.includes(" ") && progValue == 100 || !event.target.value.includes(" ") && progValue == 100 / (surveyLength + 1)) {
+
+                valueAdder(100 / (surveyLength + 1));
+            }
+        }
+    };
+
+    //Progress bar
+
+    function LinearProgressWithLabel(props) {
+        return (
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+                <Box sx={{ width: "100%", mr: 1 }}>
+                    <LinearProgress variant="determinate" {...props} />
+                </Box>
+                <Box sx={{ minWidth: 35 }}>
+                    <Typography variant="body2" color="text.secondary">{`${Math.round(
+                        props.value
+                    )}%`}</Typography>
+                </Box>
+            </Box>
+        );
+    }
+
+    LinearProgressWithLabel.propTypes = {
+
+        value: PropTypes.number.isRequired
     };
 
     return (
 
         <div>
+            <LinearProgressWithLabel value={progValue} />
             <h1>Survey {surveyId}</h1>
             <h2>Demo 1.0.0</h2>
             <Link style={{ color: 'white' }} to="/"><button variant="contained" style={{ margin: '10px' }} class="btn btn-primary">Home</button></Link>
@@ -147,16 +226,16 @@ function Survey(props) {
                     <FormControl component="fieldset">
                         <FormLabel component="legend" key={key}>{item}</FormLabel>
                         <RadioGroup
-                            aria-label="car"
+                            aria-label="quiz"
                             name={item}
                             onChange={handleChange}
+
                         >
 
                             {ansMap.map((item, key) => (
 
                                 <FormControlLabel key={key} value={item} control={<Radio />} label={item} />
                             ))}
-
 
                         </RadioGroup>
 

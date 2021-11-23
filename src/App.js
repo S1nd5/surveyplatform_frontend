@@ -8,6 +8,8 @@ import './css/App.css';
 
 function App() {
 
+  //Routing traffic to different components
+
   return (
 
     <div className="App" style={{ marginTop: 100 }}>
@@ -15,7 +17,7 @@ function App() {
         <Switch>
           <Route exact path="/" component={Home} />
           <Route path="/survey:surveyId" component={Survey} />
-          <Route render={() => <h1 style={{ color: 'white' }}>Page not found</h1>} />
+          <Route render={() => <h1 style={{ color: 'black' }}>Page not found</h1>} />
         </Switch>
       </BrowserRouter>
     </div>

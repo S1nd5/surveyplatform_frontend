@@ -2,7 +2,6 @@ import { Box, FormControl, FormLabel } from '@material-ui/core';
 import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 
-import '../css/App.css';
 import '../css/bootstrap.min.css';
 
 function Home() {
@@ -10,6 +9,8 @@ function Home() {
   const [dataComponent, setDataComponent] = useState([]);
 
   let dataArray = []
+
+  //Fetching the data needed for Survey buttons on Home page, putting it to useState Hook and mapping it to page later on
 
   const fetchData = () => {
 
