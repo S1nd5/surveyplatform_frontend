@@ -1,20 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
+import React from 'react';
 import Button from '@mui/material/Button';
 
-import Questions from './Questions';
-
 import '../css/bootstrap.min.css';
+import '../css/App.css';
 
 function Console() {
 
+// Home page 
+
     return (
-        <div>
-            <Questions/>
+        <div className="App">
+            <div style={{ backgroundColor: 'white', width: 500, height: 500, margin: 'auto', marginTop: 200, borderRadius: 10}}>
+                <h1 style={{ paddingTop: 50 }}>Admin Console</h1>
+                <Button variant="contained" style={{ margin: '10px', width: '80%', height: '30%', fontSize: 50, paddingTop: 30, borderRadius: 10}} class="btn btn-info" href="/surveys" >Surveys</Button>
+                <br />
+                <Button variant="contained" style={{ margin: '10px', width: '80%', height: '30%', fontSize: 50, paddingTop: 30, borderRadius: 10}} class="btn btn-info" href="/questions">Questions</Button>
+            </div>
         </div>
     );
 }
