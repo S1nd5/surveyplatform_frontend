@@ -43,8 +43,10 @@ function Survey(props) {
                 //Whole survey data
                 const data = await response.json()
 
+                console.log(data.length);
+
                 //How many questions there is in this survey
-                setSurveyLength(data[surveyId - 1].questions.length);
+                setSurveyLength(data.length);
 
                 //Saving surveyId
                 setSurveyId(data[surveyId - 1].s_id);
@@ -78,6 +80,8 @@ function Survey(props) {
 
     //Change to next survey
     const nextPage = () => {
+
+        console.log(surveyLength);
 
         const id = parseInt(props.match.params.surveyId) + 1;
 
@@ -215,42 +219,43 @@ function Survey(props) {
 
     return (
 
-        <div>
+        <div style={{ fontFamily: 'Courier New' }}>
             <LinearProgressWithLabel value={progValue} />
-            <h1>Survey {surveyId}</h1>
-            <h2>Demo 1.0.0</h2>
-            <Link style={{ color: 'white' }} to="/"><button variant="contained" style={{ margin: '10px' }} class="btn btn-primary">Home</button></Link>
-            <Button variant="contained" style={{ margin: '10px' }} class="btn btn-primary" onClick={nextPage}>Next</Button>
-            {questions.map((item, key) => (
-                <div style={{ marginTop: 30 }}>
-                    <FormControl component="fieldset">
-                        <FormLabel component="legend" key={key}>{item}</FormLabel>
-                        <RadioGroup
-                            aria-label="quiz"
-                            name={item}
-                            onChange={handleChange}
+            <Link style={{ color: 'white' }} to="/"><button variant="contained" style={{ margin: '10px', width: 200, height: 100, fontSize: 30, borderRadius: 10 }} class="btn btn-primary">Home</button></Link>
+            <Button variant="contained" style={{ margin: '10px', width: 200, height: 100, fontSize: 30, borderRadius: 10 }} class="btn btn-secondary" onClick={nextPage}>Next</Button>
+            <div style={{ backgroundColor: 'white', width: 700, margin: 'auto', marginTop: 40, borderRadius: 10 }}>
+                <h1>Survey {surveyId}</h1>
+                {questions.map((item, key) => (
+                    <div style={{ marginTop: 30 }}>
+                        <FormControl component="fieldset">
+                            <FormLabel component="legend" key={key}>{item}</FormLabel>
+                            <RadioGroup
+                                aria-label="quiz"
+                                name={item}
+                                onChange={handleChange}
 
-                        >
+                            >
 
-                            {ansMap.map((item, key) => (
+                                {ansMap.map((item, key) => (
 
-                                <FormControlLabel key={key} value={item} control={<Radio />} label={item} />
-                            ))}
+                                    <FormControlLabel key={key} value={item} control={<Radio />} label={item} />
+                                ))}
 
-                        </RadioGroup>
+                            </RadioGroup>
 
-                    </FormControl>
+                        </FormControl>
 
-                </div>
-            ))}
-            <form>
-                <input type="text" id="name" name="name" placeholder="E.g. John Smith" onChange={handleRespondent} />
-            </form>
+                    </div>
+                ))}
+                <form>
+                    <input type="text" id="name" name="name" placeholder="E.g. John Smith" onChange={handleRespondent} />
+                </form>
 
-            <Button variant="contained" style={{ margin: '10px' }} class="btn btn-primary" onClick={postData}>Submit</Button>
+                <Button variant="contained" style={{ margin: '10px', width: 150, height: 50, fontSize: 20, paddingTop: 5, borderRadius: 10 }} class="btn btn-info" onClick={postData}>Submit</Button>
 
-            <div style={{ marginTop: 20, color: "green" }}>{isVisible ? <i>Success</i> : null}</div>
-
+                <div style={{ marginTop: 20, color: "green" }}>{isVisible ? <i>Success</i> : null}</div>
+            </div>
+            <img src="https://i.ibb.co/Npb79BV/logo-2.png" alt="logo" style={{ marginTop: 150 }}></img>
         </div>
     );
 }
