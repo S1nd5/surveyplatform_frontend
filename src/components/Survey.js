@@ -221,6 +221,8 @@ function Survey(props) {
 
         <div style={{ fontFamily: 'Courier New' }}>
             <LinearProgressWithLabel value={progValue} />
+            <img src="https://i.ibb.co/Npb79BV/logo-2.png" alt="logo" ></img>
+            <br/>
             <Link style={{ color: 'white' }} to="/"><button variant="contained" style={{ margin: '10px', width: 200, height: 100, fontSize: 30, borderRadius: 10 }} class="btn btn-primary">Home</button></Link>
             <Button variant="contained" style={{ margin: '10px', width: 200, height: 100, fontSize: 30, borderRadius: 10 }} class="btn btn-secondary" onClick={nextPage}>Next</Button>
             <div style={{ backgroundColor: 'white', width: 700, margin: 'auto', marginTop: 40, borderRadius: 10 }}>
@@ -255,7 +257,6 @@ function Survey(props) {
 
                 <div style={{ marginTop: 20, color: "green" }}>{isVisible ? <i>Success</i> : null}</div>
             </div>
-            <img src="https://i.ibb.co/Npb79BV/logo-2.png" alt="logo" style={{ marginTop: 150 }}></img>
         </div>
     );
 }

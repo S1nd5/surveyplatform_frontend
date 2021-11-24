@@ -4,6 +4,6 @@ import Home from './components/Home';
 
 test('renders header', () => {
   render(<Home />);
-  const headerElement = screen.getByText(/Welcome to SurveyHub!/i);
+  const headerElement = screen.getByText(/Surveys/i);
   expect(headerElement).toBeInTheDocument();
 });

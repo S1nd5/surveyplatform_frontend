@@ -59,7 +59,6 @@ function Home() {
           </FormControl>
         </Box>
       </div>
-      <img src="https://i.ibb.co/Npb79BV/logo-2.png" alt="logo" style={{ marginTop: 350 }}></img>
     </div>
 
   );
