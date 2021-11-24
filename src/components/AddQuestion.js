@@ -62,11 +62,8 @@ function AddQuestion(props) {
 
                 for (let i = 0; i < data.length; i++) {
 
-                    console.log(data[0].name + " (" + data[0].s_id + ")");
-                    dataArray.push(data[0].name + " (" + data[0].s_id + ")");
+                    dataArray.push(data[i].name + " (" + data[i].s_id + ")");
                 }
-
-                console.log(dataArray);
 
                 setChoices(dataArray);
 
