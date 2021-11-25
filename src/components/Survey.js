@@ -222,10 +222,7 @@ function Survey(props) {
         <div style={{ fontFamily: 'Courier New' }}>
             <LinearProgressWithLabel value={progValue} />
             <img src="https://i.ibb.co/Npb79BV/logo-2.png" alt="logo" ></img>
-            <br/>
-            <Link style={{ color: 'white' }} to="/"><button variant="contained" style={{ margin: '10px', width: 200, height: 100, fontSize: 30, borderRadius: 10 }} class="btn btn-primary">Home</button></Link>
-            <Button variant="contained" style={{ margin: '10px', width: 200, height: 100, fontSize: 30, borderRadius: 10 }} class="btn btn-secondary" onClick={nextPage}>Next</Button>
-            <div style={{ backgroundColor: 'white', width: 700, margin: 'auto', marginTop: 40, borderRadius: 10 }}>
+            <div style={{ backgroundColor: 'white', width: 700, margin: 'auto', borderRadius: 10 }}>
                 <h1>Survey {surveyId}</h1>
                 {questions.map((item, key) => (
                     <div style={{ marginTop: 30 }}>
@@ -252,9 +249,10 @@ function Survey(props) {
                 <form>
                     <input type="text" id="name" name="name" placeholder="E.g. John Smith" onChange={handleRespondent} />
                 </form>
-
+                <br/>
+                <Link style={{ color: 'white' }} to="/"><button variant="contained" style={{ margin: '10px', width: 150, height: 50, fontSize: 20, paddingTop: 5, borderRadius: 10 }} class="btn btn-primary">Home</button></Link>
                 <Button variant="contained" style={{ margin: '10px', width: 150, height: 50, fontSize: 20, paddingTop: 5, borderRadius: 10 }} class="btn btn-info" onClick={postData}>Submit</Button>
-
+                <Button variant="contained" style={{ margin: '10px', width: 150, height: 50, fontSize: 20, paddingTop: 5, borderRadius: 10 }} class="btn btn-secondary" onClick={nextPage}>Next</Button>
                 <div style={{ marginTop: 20, color: "green" }}>{isVisible ? <i>Success</i> : null}</div>
             </div>
         </div>
