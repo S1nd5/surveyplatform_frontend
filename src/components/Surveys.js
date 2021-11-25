@@ -92,13 +92,14 @@ function Surveys() {
 
     return (
         <div>
-            <div style={{ width: 600, height: 120, margin: 'auto', marginTop: 50, borderRadius: 10}}>
-                <Button variant="contained" style={{ margin: '10px', width: 200, height: 100, fontSize: 30, paddingTop: 20, borderRadius: 10 }} class="btn btn-primary" href="/">Home</Button>
-                <Button variant="contained" style={{ margin: '10px', width: 200, height: 100, fontSize: 30, paddingTop: 20, borderRadius: 10 }} class="btn btn-secondary" href="/questions">Questions</Button>
+            <div style={{ width: 800, height: 0, margin: 'auto', marginTop: 0, borderRadius: 10 }}>
+                <Button variant="contained" style={{ marginRight: '200px', marginTop: '20px', width: 200, height: 100, fontSize: 30, paddingTop: 20, borderRadius: 10 }} class="btn btn-primary" href="/">Home</Button>
+                <Button variant="contained" style={{ margin: '10px', marginTop: '20px', width: 200, height: 100, fontSize: 30, paddingTop: 20, borderRadius: 10 }} class="btn btn-secondary" href="/questions">Questions</Button>
             </div>
 
-            <div style={{ backgroundColor: 'white', width: 800, marginLeft: 'auto', marginRight: 'auto', borderRadius: 10 }}>
+            <div style={{ backgroundColor: 'white', width: 800,  marginLeft: 'auto', marginRight: 'auto', borderRadius: 10 }}>
                 <h1 style={{ margin: 10 }}>Surveys</h1>
+                
                 <AddSurvey addSurvey={addSurvey} />
                 <ReactTable filterable={true} defaultPageSize={10}
                     data={surveys} columns={columns} />
