@@ -12,6 +12,7 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
 import '../css/bootstrap.min.css';
+import '../css/App.css';
 
 function Survey(props) {
 
@@ -19,16 +20,20 @@ function Survey(props) {
     const [questions, setQuestions] = useState([]);
 
     const [surveyId, setSurveyId] = useState(props.match.params.surveyId);
+    const [currentId, setCurrentId] = useState(0);
+
     const [ansNeeded, setAnsNeeded] = useState(0);
-    const [surveyLength, setSurveyLength] = useState();
+    const [questionsLength, setSuestionsLength] = useState();
 
     const [ansMap, setAnsMap] = useState([]);
     const [selectedAns, setSelectedAns] = useState([]);
 
     const [isVisible, setVisible] = useState(false);
+    const [buttonVisible, setButtonVisible] = useState(false);
     const [progValue, setProgValue] = useState(0);
 
     const [usedAnswer, setUsedAnswer] = useState([]);
+    const [surveyName, setSurveyName] = useState([]);
 
     let ansArray = [];
     let quesArray = [];
@@ -41,17 +46,23 @@ function Survey(props) {
             try {
 
                 //Whole survey data
+
                 const data = await response.json()
 
-                console.log(data.length);
+                console.log(data[surveyId - 1].questions.length);
 
-                //How many questions there is in this survey
-                setSurveyLength(data.length);
+                setSurveyName(data[surveyId - 1].name);
+
+                //How many questions there are in this survey
+
+                setSuestionsLength(data[surveyId - 1].questions.length);
 
                 //Saving surveyId
+
                 setSurveyId(data[surveyId - 1].s_id);
 
                 //Radiobutton values
+
                 ansArray.push(data[0].questions[0].opt1)
                 ansArray.push(data[0].questions[0].opt2)
                 ansArray.push(data[0].questions[0].opt3)
@@ -59,6 +70,7 @@ function Survey(props) {
                 setAnsMap(ansArray);
 
                 //Question values
+
                 for (let i = 0; i < data[surveyId - 1].questions.length; i++) {
 
                     quesArray.push(data[surveyId - 1].questions[i].question);
@@ -78,31 +90,34 @@ function Survey(props) {
         // eslint-disable-next-line
     }, []);
 
-    //Change to next survey
-    const nextPage = () => {
+    //Change to next question
 
-        console.log(surveyLength);
+    const nextQuestion = () => {
 
-        const id = parseInt(props.match.params.surveyId) + 1;
+        console.log(questionsLength - (currentId + 1));
 
-        if (surveyLength > surveyId) {
+        if (questionsLength > currentId) {
 
-            window.location.href = "https://dev.awsproject.link/Survey%20" + id;
+            setCurrentId(currentId + 1);
+        }
 
-        } else {
+        if (questionsLength - (currentId + 1) === 1) {
 
-            window.alert("This is the last survey.");
+            setButtonVisible(true);
         }
     }
 
     //Send post request via rest
+
     const postData = () => {
 
         //Does the answer include everything?
-        if (ansNeeded >= surveyLength) {
+
+        if (ansNeeded >= questionsLength) {
             if (respondent.toString().includes(" ") && respondent.toString().split(" ")[1] !== "") {
 
                 //Answers in reverse order, so we get the latest choices
+
                 let chars = [];
                 selectedAns.reverse();
 
@@ -158,7 +173,7 @@ function Survey(props) {
 
     const valueAdder = (value) => {
 
-        if (value === 100 / (surveyLength + 1)) {
+        if (value === 100 / (questionsLength + 1)) {
 
             setProgValue(progValue - value);
 
@@ -170,7 +185,7 @@ function Survey(props) {
 
             if (usedAnswer.some(even) === false && progValue !== 100) {
 
-                setProgValue(progValue + 100 / (surveyLength + 1));
+                setProgValue(progValue + 100 / (questionsLength + 1));
             }
         }
     }
@@ -183,14 +198,14 @@ function Survey(props) {
 
         if (event.target.value.split(" ")[1] !== "" && event.target.value.toString().length > 2) {
             // eslint-disable-next-line
-            if (respondent !== "" && respondent.includes(" ") && 100 / (surveyLength + 1) + progValue === 100 || progValue === 0 && progValue < 100 / (surveyLength + 1) && respondent !== "" && respondent.includes(" ")) {
+            if (respondent !== "" && respondent.includes(" ") && 100 / (questionsLength + 1) + progValue === 100 || progValue === 0 && progValue < 100 / (questionsLength + 1) && respondent !== "" && respondent.includes(" ")) {
 
                 valueAdder(event.target.value);
             }
             // eslint-disable-next-line
-            if (!event.target.value.includes(" ") && progValue == 100 || !event.target.value.includes(" ") && progValue == 100 / (surveyLength + 1)) {
+            if (!event.target.value.includes(" ") && progValue == 100 || !event.target.value.includes(" ") && progValue == 100 / (questionsLength + 1)) {
 
-                valueAdder(100 / (surveyLength + 1));
+                valueAdder(100 / (questionsLength + 1));
             }
         }
     };
@@ -223,38 +238,41 @@ function Survey(props) {
             <LinearProgressWithLabel value={progValue} />
             <img src="https://i.ibb.co/Npb79BV/logo-2.png" alt="logo" ></img>
             <div style={{ backgroundColor: 'white', width: 700, margin: 'auto', borderRadius: 10 }}>
-                <h1>Survey {surveyId}</h1>
-                {questions.map((item, key) => (
-                    <div style={{ marginTop: 30 }}>
-                        <FormControl component="fieldset">
-                            <FormLabel component="legend" key={key}>{item}</FormLabel>
-                            <RadioGroup
-                                aria-label="quiz"
-                                name={item}
-                                onChange={handleChange}
+                <h1>Survey {surveyName}</h1>
+                <div style={{ marginTop: 30 }}>
+                    <FormControl component="fieldset">
+                        <FormLabel component="legend">{questions[currentId]}</FormLabel>
+                        <RadioGroup
+                            aria-label="quiz"
+                            name={questions[currentId]}
+                            onChange={handleChange}
 
-                            >
+                        >
 
-                                {ansMap.map((item, key) => (
+                            {ansMap.map((item, key) => (
 
-                                    <FormControlLabel key={key} value={item} control={<Radio />} label={item} />
-                                ))}
+                                <FormControlLabel key={key} value={item} control={<Radio />} label={item} />
+                            ))}
 
-                            </RadioGroup>
+                        </RadioGroup>
 
-                        </FormControl>
+                    </FormControl>
 
-                    </div>
-                ))}
-                <form>
-                    <input type="text" id="name" name="name" placeholder="E.g. John Smith" onChange={handleRespondent} />
+                </div>
+
+                <Link style={{ color: 'white' }} to="/"><button variant="contained" style={{ margin: '10px', width: 150, height: 50, fontSize: 20, paddingTop: 5, borderRadius: 10 }} className="btn btn-primary">Home</button></Link>
+                {buttonVisible ? <div><Button variant="contained" style={{ margin: '10px', width: 150, height: 50, fontSize: 20, paddingTop: 5, borderRadius: 10, fontFamily: 'Courier New' }} class="btn btn-info" onClick={postData}>Submit</Button>
+                    <Button variant="contained" style={{ margin: '10px', width: 150, height: 50, fontSize: 20, paddingTop: 5, borderRadius: 10, fontFamily: 'Courier New' }} class="btn btn-secondary" onClick={nextQuestion} disabled>Next</Button><form>
+                    <input type="text" id="name" name="name" placeholder="E.g. John Smith" onChange={handleRespondent}/>
                 </form>
-                <br/>
-                <Link style={{ color: 'white' }} to="/"><button variant="contained" style={{ margin: '10px', width: 150, height: 50, fontSize: 20, paddingTop: 5, borderRadius: 10 }} class="btn btn-primary">Home</button></Link>
-                <Button variant="contained" style={{ margin: '10px', width: 150, height: 50, fontSize: 20, paddingTop: 5, borderRadius: 10 }} class="btn btn-info" onClick={postData}>Submit</Button>
-                <Button variant="contained" style={{ margin: '10px', width: 150, height: 50, fontSize: 20, paddingTop: 5, borderRadius: 10 }} class="btn btn-secondary" onClick={nextPage}>Next</Button>
-                <div style={{ marginTop: 20, color: "green" }}>{isVisible ? <i>Success</i> : null}</div>
-            </div>
+                <br /></div> : <div><Button variant="contained" style={{ margin: '10px', width: 150, height: 50, fontSize: 20, paddingTop: 5, borderRadius: 10, fontFamily: 'Courier New' }} class="btn btn-info" onClick={postData} disabled>Submit</Button>
+                    <Button variant="contained" style={{ margin: '10px', width: 150, height: 50, fontSize: 20, paddingTop: 5, borderRadius: 10, fontFamily: 'Courier New' }} class="btn btn-secondary" onClick={nextQuestion}>Next</Button><form>
+                        <input type="text" id="name" name="name" placeholder="E.g. John Smith" onChange={handleRespondent} hidden/>
+                    </form>
+                    <br /></div>}</div>
+
+
+            <div style={{ marginTop: 20, color: "green" }}>{isVisible ? <i>Success</i> : null}</div>
         </div>
     );
 }

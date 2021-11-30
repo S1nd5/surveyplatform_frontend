@@ -24,7 +24,7 @@ function Home() {
 
         for (let i = 0; i < data.length; i++) {
 
-          dataArray.push({ addres: "Survey " + (i + 1).toString(), label: data[i].name });
+          dataArray.push({ address: "Survey" + (i + 1).toString(), label: data[i].name });
           //labelArray.push(data[i].name);
         }
 
@@ -54,7 +54,7 @@ function Home() {
               component="legend" style={{ fontSize: 40, color: 'black', fontFamily: 'Courier New' }}>Surveys
             </FormLabel>
             {dataComponent.map((item, key) => (
-              <Link style={{ color: 'white' }} to={item.addres} key={key}><button style={{ marginTop: '10px', marginBottom: '10px', width: 'auto', height: 'auto', minHeight: 50, minWidth: 120 }} class="btn btn-primary">{item.label}</button></Link>
+              <Link style={{ color: 'white' }} to={item.address} key={key}><button style={{ marginTop: '10px', marginBottom: '10px', width: 'auto', height: 'auto', minHeight: 50, minWidth: 120 }} className="btn btn-primary">{item.label}</button></Link>
             ))}
           </FormControl>
         </Box>

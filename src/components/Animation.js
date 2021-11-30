@@ -3,6 +3,8 @@ import '../css/logo.png';
 
 function Animation() {
 
+    //Text element animation
+
     return (
 
         <div id="container">
