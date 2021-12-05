@@ -9,7 +9,11 @@ import LinearProgress from "@mui/material/LinearProgress";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { Link } from "react-router-dom";
-import PropTypes from "prop-types";
+import PropTypes from "prop-types"; 
+
+import SubmitButton from "./SubmitButton.js";
+import NextButton from "./NextButton.js";
+import OpenQuestion from "./OpenQuestion.js";
 
 import '../css/bootstrap.min.css';
 import '../css/App.css';
@@ -23,7 +27,7 @@ function Survey(props) {
     const [currentId, setCurrentId] = useState(0);
 
     const [ansNeeded, setAnsNeeded] = useState(0);
-    const [questionsLength, setSuestionsLength] = useState();
+    const [questionsLength, setQuestionsLength] = useState();
 
     const [ansMap, setAnsMap] = useState([]);
     const [selectedAns, setSelectedAns] = useState([]);
@@ -49,13 +53,13 @@ function Survey(props) {
 
                 const data = await response.json()
 
-                console.log(data[surveyId - 1].questions.length);
+                //console.log(data[surveyId - 1].questions.length);
 
                 setSurveyName(data[surveyId - 1].name);
 
                 //How many questions there are in this survey
 
-                setSuestionsLength(data[surveyId - 1].questions.length);
+                setQuestionsLength(data[surveyId - 1].questions.length);
 
                 //Saving surveyId
 
@@ -68,6 +72,8 @@ function Survey(props) {
                 ansArray.push(data[0].questions[0].opt3)
 
                 setAnsMap(ansArray);
+
+                console.log(ansMap[0]);
 
                 //Question values
 
@@ -261,16 +267,7 @@ function Survey(props) {
                 </div>
 
                 <Link style={{ color: 'white' }} to="/"><button variant="contained" style={{ margin: '10px', width: 150, height: 50, fontSize: 20, paddingTop: 5, borderRadius: 10 }} className="btn btn-primary">Home</button></Link>
-                {buttonVisible ? <div><Button variant="contained" style={{ margin: '10px', width: 150, height: 50, fontSize: 20, paddingTop: 5, borderRadius: 10, fontFamily: 'Courier New' }} class="btn btn-info" onClick={postData}>Submit</Button>
-                    <Button variant="contained" style={{ margin: '10px', width: 150, height: 50, fontSize: 20, paddingTop: 5, borderRadius: 10, fontFamily: 'Courier New' }} class="btn btn-secondary" onClick={nextQuestion} disabled>Next</Button><form>
-                    <input type="text" id="name" name="name" placeholder="E.g. John Smith" onChange={handleRespondent}/>
-                </form>
-                <br /></div> : <div><Button variant="contained" style={{ margin: '10px', width: 150, height: 50, fontSize: 20, paddingTop: 5, borderRadius: 10, fontFamily: 'Courier New' }} class="btn btn-info" onClick={postData} disabled>Submit</Button>
-                    <Button variant="contained" style={{ margin: '10px', width: 150, height: 50, fontSize: 20, paddingTop: 5, borderRadius: 10, fontFamily: 'Courier New' }} class="btn btn-secondary" onClick={nextQuestion}>Next</Button><form>
-                        <input type="text" id="name" name="name" placeholder="E.g. John Smith" onChange={handleRespondent} hidden/>
-                    </form>
-                    <br /></div>}</div>
-
+                {buttonVisible ? <div><SubmitButton postData={postData}/> <OpenQuestion handleRespondent={handleRespondent} /></div> : <NextButton nextQuestion={nextQuestion}/> }</div>
 
             <div style={{ marginTop: 20, color: "green" }}>{isVisible ? <i>Success</i> : null}</div>
         </div>
