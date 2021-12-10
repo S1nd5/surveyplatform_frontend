@@ -1,18 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+
+import MultipleChoicesQuestion from './MultipleChoicesQuestion';
+import QuestionField from './QuestionField';
 
 function AddQuestion(props) {
 
     // Dialog, which is used to add new question to database
 
     const [open, setOpen] = useState(false);
-    const [question, setQuestion] = useState({ s_id: "", opt1: "", opt2: "", opt3: "", opt4: "Ehkä", question: "" });
+    const [question, setQuestion] = useState({ s_id: "", opt1: "", opt2: "", opt3: "", opt4: "", q_type: "", question: "" });
     const [choices, setChoices] = useState([]);
+
+    const [radioVisible, setRadioVisible] = useState(false);
+    const [openQuestionVisible, setOpenQuestionVisible] = useState(false);
+    const [scope1to5Visible, setScope1to5Visible] = useState(false);
+    const [checkboxVisible, setCheckboxVisible] = useState(false);
 
     let dataArray = [];
 
@@ -28,14 +35,19 @@ function AddQuestion(props) {
 
     const handleSave = () => {
 
-        if (question.s_id === "" || question.opt1 === "" || question.opt2 === "" || question.opt3 === "" || question === "") {
+        console.log(question);
 
-            window.alert("Fill the required field(s).");
+        if (question.s_id !== "" && question.opt1 !== "" && question.question !== "" && question.q_type !== "") {
 
+            props.addQuestion({ survey: { s_id: question.s_id }, opt1: question.opt1, opt2: question.opt2, opt3: question.opt3, opt4: question.opt4, q_type: question.q_type, question: question.question });
+            handleClose();
+        } else if (question.s_id !== "" && question.question !== "" && question.q_type === "Scope 1 to 5") {
+
+            props.addQuestion({ survey: { s_id: question.s_id }, opt1: "Täysin samaa mieltä", opt2: "Lähes samaa mieltä", opt3: "En osaa sanoa", opt4: "Lähes eri mieltä", q_type: question.q_type, question: question.question });
+            handleClose();
         } else {
 
-            props.addQuestion({ survey: { s_id: question.s_id }, opt1: question.opt1, opt2: question.opt2, opt3: question.opt3, opt4: question.opt4, question: question.question });
-            handleClose();
+            window.alert("Fill the required field(s).");
         }
     }
 
@@ -45,6 +57,15 @@ function AddQuestion(props) {
 
             setQuestion({ ...question, [e.target.name]: e.target.value.toString().split("(")[1].split(")")[0] })
 
+        } else if (e.target.name === "q_type") {
+
+            setRadioVisible(false);
+            setOpenQuestionVisible(false);
+            setScope1to5Visible(false);
+            setCheckboxVisible(false);
+            // eslint-disable-next-line
+            eval("set" + e.target.value.replace(/\s/g, '') + "Visible(true);");
+            setQuestion({ ...question, [e.target.name]: e.target.value })
         } else {
 
             setQuestion({ ...question, [e.target.name]: e.target.value })
@@ -54,6 +75,7 @@ function AddQuestion(props) {
     // Data for the select element
 
     const fetchData = () => {
+
         fetch('https://json.awsproject.link/surveys').then(async response => {
 
             try {
@@ -66,7 +88,6 @@ function AddQuestion(props) {
                 }
 
                 setChoices(dataArray);
-
             } catch (error) {
                 console.error(error)
             }
@@ -82,58 +103,30 @@ function AddQuestion(props) {
 
     return (
         <div>
-            <Button variant="contained" style={{ margin: '10px', width: 150, height: 50, fontSize: 20, paddingTop: 5, borderRadius: 10 }} class="btn btn-info" onClick={handleClickOpen}>
+            <Button variant="contained" style={{ margin: '10px', width: 150, height: 70, fontSize: 20, paddingTop: 5, borderRadius: 10, color: 'white' }} class="btn btn-success" onClick={handleClickOpen}>
                 Add question
             </Button>
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>Add question</DialogTitle>
                 <DialogContent>
-                    <select id="s_id" name="s_id" variant="standard" class="form-select" aria-label="Default select example" onChange={inputChanged}>
-                        <option selected>Survey name</option>
+                    <select id="s_id" name="s_id" variant="standard" class="form-select" onChange={inputChanged}>
+                        <option defaultValue>Survey name</option>
                         {choices.map((item, key) => (
                             <option value={item} key={key}>{item}</option>
                         ))}
                     </select>
-                    <TextField
-                        margin="dense"
-                        id="question"
-                        name="question"
-                        onChange={inputChanged}
-                        label="Question"
-                        fullWidth
-                        variant="standard"
-                        required
-                    />
-                    <TextField
-                        margin="dense"
-                        id="op1"
-                        name="opt1"
-                        onChange={inputChanged}
-                        label="Option 1"
-                        fullWidth
-                        variant="standard"
-                        required
-                    />
-                    <TextField
-                        margin="dense"
-                        id="op2"
-                        name="opt2"
-                        onChange={inputChanged}
-                        label="Option 2"
-                        fullWidth
-                        variant="standard"
-                        required
-                    />
-                    <TextField
-                        margin="dense"
-                        id="op3"
-                        name="opt3"
-                        onChange={inputChanged}
-                        label="Option 3"
-                        fullWidth
-                        variant="standard"
-                        required
-                    />
+                    <br />
+                    <select id="q_type" name="q_type" variant="standard" class="form-select" onChange={inputChanged}>
+                        <option defaultValue>Question type</option>
+                        <option>Radio</option>
+                        <option>Open Question</option>
+                        <option>Checkbox</option>
+                        <option>Scope 1 to 5</option>
+                    </select>
+                    {radioVisible ? <MultipleChoicesQuestion inputChanged={inputChanged} /> : null}
+                    {openQuestionVisible ? <QuestionField inputChanged={inputChanged} /> : null}
+                    {scope1to5Visible ? <QuestionField inputChanged={inputChanged} /> : null}
+                    {checkboxVisible ? <MultipleChoicesQuestion inputChanged={inputChanged} /> : null}
                 </DialogContent>
                 <DialogActions>
                     <Button variant="contained" style={{ margin: '10px', width: 85, height: 45, fontSize: 20, paddingTop: 5, borderRadius: 10 }} class="btn btn-success" onClick={handleSave}>Add</Button>

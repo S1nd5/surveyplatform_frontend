@@ -37,19 +37,34 @@ function Questions() {
             accessor: 'q_id'
         },
         {
+            Header: 'Question type',
+            maxWidth: '120',
+            accessor: 'q_type'
+        },
+        {
             Header: 'Option 1',
-            maxWidth: '100',
+            maxWidth: '160',
             accessor: 'opt1'
         },
         {
             Header: 'Option 2',
-            maxWidth: '100',
+            maxWidth: '160',
             accessor: 'opt2'
         },
         {
             Header: 'Option 3',
-            maxWidth: '100',
+            maxWidth: '160',
             accessor: 'opt3'
+        },
+        {
+            Header: 'Option 4',
+            maxWidth: '160',
+            accessor: 'opt4'
+        },
+        {
+            Header: 'Option 5',
+            maxWidth: '160',
+            accessor: 'opt5'
         },
         {
             filterable: false,
@@ -76,7 +91,7 @@ function Questions() {
 
                     while (b < data[a].questions.length) {
 
-                        dataArray.push({ "name": data[a].name, "question": data[a].questions[b].question, "opt1": data[a].questions[b].opt1, "opt2": data[a].questions[b].opt2, "opt3": data[a].questions[b].opt3, "opt4": data[a].questions[b].opt4, "q_id": data[a].questions[b].q_id, "s_id": data[a].s_id });
+                        dataArray.push({ "name": data[a].name, "q_type": data[a].questions[b].q_type, "question": data[a].questions[b].question, "opt1": data[a].questions[b].opt1, "opt2": data[a].questions[b].opt2, "opt3": data[a].questions[b].opt3, "opt4": data[a].questions[b].opt4, "q_id": data[a].questions[b].q_id, "s_id": data[a].s_id });
                         b++;
                     }
                 }
@@ -98,7 +113,7 @@ function Questions() {
     // Add or delete survey from table
 
     const addQuestion = question => {
-        
+
         fetch('https://json.awsproject.link/questions',
             {
                 method: 'POST',
@@ -112,7 +127,7 @@ function Questions() {
 
     const deleteQuestion = (value) => {
 
-        if (window.confirm("Do you really want to delete this survey? All the related data will be deleted.")) {
+        if (window.confirm("Do you really want to delete this question?")) {
 
             fetch(value, { method: 'DELETE' })
                 .then(response => fetchData())
@@ -124,13 +139,12 @@ function Questions() {
 
     return (
         <div>
-            <div style={{ width: 800, height: 0, margin: 'auto', marginTop: 0, borderRadius: 10 }}>
-                <Button variant="contained" style={{ marginRight: '200px', marginTop: '20px', width: 200, height: 100, fontSize: 30, paddingTop: 20, borderRadius: 10 }} class="btn btn-primary" href="/">Home</Button>
-                <Button variant="contained" style={{ margin: '10px', marginTop: '20px', width: 200, height: 100, fontSize: 30, paddingTop: 20, borderRadius: 10 }} class="btn btn-secondary" href="/surveys">Surveys</Button>
-            </div>
-            <div style={{ backgroundColor: 'white', width: 1200, marginLeft: 'auto', marginRight: 'auto', borderRadius: 10 }}>
+            <div style={{ backgroundColor: 'white', width: 1820, marginLeft: 'auto', marginRight: 'auto', marginTop: 100, borderRadius: 10 }}>
                 <h1 style={{ margin: 10 }}>Questions</h1>
-                <AddQuestion addQuestion={addQuestion} />
+                <Button variant="contained" style={{ margin: '10px', width: 150, height: 70, fontSize: 20, paddingTop: 15, borderRadius: 10 }} class="btn btn-primary" href="/">Home</Button>
+                <Button variant="contained" style={{ margin: '10px', width: 150, height: 70, fontSize: 20, paddingTop: 15, borderRadius: 10 }} class="btn btn-secondary" href="/surveys">Surveys</Button>
+                <Button variant="contained" style={{ margin: '10px', width: 150, height: 70, fontSize: 20, paddingTop: 15, borderRadius: 10, color: 'white' }} class="btn btn-info" href="/statistics">Statistics</Button>
+                <Button><AddQuestion addQuestion={addQuestion} /></Button>
                 <ReactTable filterable={true} defaultPageSize={10}
                     data={questions} columns={columns} />
             </div>

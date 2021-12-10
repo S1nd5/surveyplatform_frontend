@@ -3,6 +3,7 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Console from './components/Console';
 import Surveys from './components/Surveys';
 import Questions from './components/Questions';
+import Statistics from './components/Statistics';
 
 import './css/App.css';
 import './css/bootstrap.min.css';
@@ -17,6 +18,7 @@ function App() {
           <Route exact path="/" component={Console} />
           <Route path="/surveys" component={Surveys} />
           <Route path="/questions" component={Questions} />
+          <Route path="/statistics" component={Statistics} />
           <Route render={() => <h1 style={{ color: 'black' }}>Page not found</h1>} />
         </Switch>
       </BrowserRouter>
