@@ -15,26 +15,23 @@ function Home() {
 
   //Fetching the data needed for Survey buttons on Home page, putting it to useState Hook and mapping it to page later on
 
-  const fetchData = () => {
+  async function fetchData() {
 
-    fetch('https://json.awsproject.link/surveys').then(async response => {
+    try {
 
-      try {
-        const data = await response.json()
+      const response = await fetch('https://json.awsproject.link/surveys');
 
-        for (let i = 0; i < data.length; i++) {
+      const data = await response.json();
 
-          dataArray.push({ address: "Survey" + (i + 1).toString(), label: data[i].name });
-          //labelArray.push(data[i].name);
-        }
+      for (let i = 0; i < data.length; i++) {
 
-        setDataComponent(dataArray);
-
-      } catch (error) {
-
-        console.error(error)
+        dataArray.push({ address: "Survey" + (i + 1).toString(), label: data[i].name });
       }
-    })
+
+      setDataComponent(dataArray);
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   useEffect(() => {
