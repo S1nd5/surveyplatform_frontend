@@ -27,8 +27,6 @@ function Statistics() {
 
                 const data = await response.json()
 
-                console.log(data);
-
                 data.forEach(answer => {
 
                     if (!respondentData.includes("Respondent " + answer.respondent.r_id + " : " + answer.respondent.firstname + " " + answer.respondent.lastname)) {
@@ -37,8 +35,6 @@ function Statistics() {
                     }
 
                     if (!questionData.includes(answer.survey.questions[0].question)) {
-
-                        console.log(answer.survey.questions[0].question);
 
                         questionData.push(answer.survey.questions[0].question);
                     }
@@ -51,15 +47,18 @@ function Statistics() {
 
                     data.forEach(answer => {
 
-                        if (answer.respondent.r_id.toString() === value.split(" ")[1].toString()) {
+                        if (answer.survey.questions[0].q_type !== "Open Question") {
 
-                            const answerData = { answer: answer.answer1, incidence: 1 };
-                            statisticsData.push(answerData);
+                            if (answer.respondent.r_id.toString() === value.split(" ")[1].toString()) {
 
-                        } else if (value === answer.survey.questions[0].question) {
+                                const answerData = { answer: answer.answer1, incidence: 1 };
+                                statisticsData.push(answerData);
 
-                            const answerData = { answer: answer.answer1, incidence: 1 };
-                            statisticsData.push(answerData);
+                            } else if (value === answer.survey.questions[0].question) {
+
+                                const answerData = { answer: answer.answer1, incidence: 1 };
+                                statisticsData.push(answerData);
+                            }
                         }
                     })
 

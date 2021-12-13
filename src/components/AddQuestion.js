@@ -41,10 +41,7 @@ function AddQuestion(props) {
 
             props.addQuestion({ survey: { s_id: question.s_id }, opt1: question.opt1, opt2: question.opt2, opt3: question.opt3, opt4: question.opt4, q_type: question.q_type, question: question.question });
             handleClose();
-        } else if (question.s_id !== "" && question.question !== "" && question.q_type === "Scope 1 to 5") {
-
-            props.addQuestion({ survey: { s_id: question.s_id }, opt1: "Täysin samaa mieltä", opt2: "Lähes samaa mieltä", opt3: "En osaa sanoa", opt4: "Lähes eri mieltä", q_type: question.q_type, question: question.question });
-            handleClose();
+   
         } else {
 
             window.alert("Fill the required field(s).");
