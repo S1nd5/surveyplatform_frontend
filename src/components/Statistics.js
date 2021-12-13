@@ -111,12 +111,13 @@ function Statistics() {
 
     return (
         <div>
-            <div style={{ backgroundColor: 'white', width: 1300, height: 1000, paddingTop: 20, marginLeft: 'auto', marginRight: 'auto', marginTop: 100, borderRadius: 10 }}>
-                <Button variant="contained" style={{ margin: '20px', width: 150, height: 70, fontSize: 20, paddingTop: 15, borderRadius: 10 }} class="btn btn-primary" href="/">Home</Button>
-                <Button variant="contained" style={{ margin: '20px', width: 150, height: 70, fontSize: 20, paddingTop: 15, borderRadius: 10 }} class="btn btn-secondary" href="/surveys">Surveys</Button>
-                <Button variant="contained" style={{ margin: '20px', width: 150, height: 70, fontSize: 20, paddingTop: 15, borderRadius: 10 }} class="btn btn-info" href="/questions">Questions</Button>
-                <br />
+            <div style={{ backgroundColor: 'white', width: 600, margin: 'auto', marginTop: 100, borderRadius: 20 }}>
                 <h1>{title}</h1>
+                <Button variant="contained" style={{ margin: 'auto', marginRight: 10, width: 100, height: '60%', fontSize: 15, borderRadius: 50 }} class="btn btn-primary" href="/">Home</Button>
+                <Button variant="contained" style={{ margin: 'auto', marginRight: 10, width: 100, height: '60%', fontSize: 15, borderRadius: 50 }} class="btn btn-secondary" href="/surveys">Surveys</Button>
+                <Button variant="contained" style={{ margin: 'auto', marginRight: 10, width: 100, height: '60%', fontSize: 15, borderRadius: 50 }} class="btn btn-info" href="/questions">Questions</Button>
+                <br />
+                <br />
                 <select id="qs_id" name="qs_id" variant="standard" class="form-select" onChange={inputChanged}>
                     <option defaultValue>Question statistics</option>
                     {questions.map((item, key) => (
@@ -131,7 +132,7 @@ function Statistics() {
                     ))}
                 </select>
                 <br />
-                <BarChart width={1200} height={700} data={statistics}>
+                <BarChart width={600} height={300} data={statistics}>
                     <XAxis dataKey="answer" />
                     <YAxis dataKey="incidence" />
                     <Tooltip />

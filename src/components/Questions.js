@@ -18,7 +18,7 @@ function Questions() {
     const columns = [
         {
             Header: 'Survey name',
-            maxWidth: '200',
+            maxWidth: '110',
             accessor: 'name'
         },
         {
@@ -28,7 +28,7 @@ function Questions() {
         },
         {
             Header: 'Question',
-            maxWidth: '400',
+            maxWidth: '200',
             accessor: 'question'
         },
         {
@@ -38,32 +38,32 @@ function Questions() {
         },
         {
             Header: 'Question type',
-            maxWidth: '120',
+            maxWidth: '115',
             accessor: 'q_type'
         },
         {
             Header: 'Option 1',
-            maxWidth: '160',
+            maxWidth: '75',
             accessor: 'opt1'
         },
         {
             Header: 'Option 2',
-            maxWidth: '160',
+            maxWidth: '75',
             accessor: 'opt2'
         },
         {
             Header: 'Option 3',
-            maxWidth: '160',
+            maxWidth: '75',
             accessor: 'opt3'
         },
         {
             Header: 'Option 4',
-            maxWidth: '160',
+            maxWidth: '75',
             accessor: 'opt4'
         },
         {
             Header: 'Option 5',
-            maxWidth: '160',
+            maxWidth: '75',
             accessor: 'opt5'
         },
         {
@@ -139,11 +139,11 @@ function Questions() {
 
     return (
         <div>
-            <div style={{ backgroundColor: 'white', width: 1820, marginLeft: 'auto', marginRight: 'auto', marginTop: 100, borderRadius: 10 }}>
+            <div style={{ backgroundColor: 'white', width: 1100, margin: 'auto', marginTop: 25, borderRadius: 20  }}>
                 <h1 style={{ margin: 10 }}>Questions</h1>
-                <Button variant="contained" style={{ margin: '10px', width: 150, height: 70, fontSize: 20, paddingTop: 15, borderRadius: 10 }} class="btn btn-primary" href="/">Home</Button>
-                <Button variant="contained" style={{ margin: '10px', width: 150, height: 70, fontSize: 20, paddingTop: 15, borderRadius: 10 }} class="btn btn-secondary" href="/surveys">Surveys</Button>
-                <Button variant="contained" style={{ margin: '10px', width: 150, height: 70, fontSize: 20, paddingTop: 15, borderRadius: 10, color: 'white' }} class="btn btn-info" href="/statistics">Statistics</Button>
+                <Button variant="contained" style={{ margin: 'auto', marginRight: 10, width: 100, height: '60%', fontSize: 15, borderRadius: 50, color: 'white' }} class="btn btn-primary" href="/">Home</Button>
+                <Button variant="contained" style={{ margin: 'auto', marginRight: 10, width: 100, height: '60%', fontSize: 15, borderRadius: 50, color: 'white' }} class="btn btn-secondary" href="/surveys">Surveys</Button>
+                <Button variant="contained" style={{ margin: 'auto', marginRight: 5, width: 100, height: '60%', fontSize: 15, borderRadius: 50, color: 'white' }} class="btn btn-info" href="/statistics">Statistics</Button>
                 <Button><AddQuestion addQuestion={addQuestion} /></Button>
                 <ReactTable filterable={true} defaultPageSize={10}
                     data={questions} columns={columns} />

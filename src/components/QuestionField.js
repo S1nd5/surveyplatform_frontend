@@ -9,6 +9,7 @@ function QuestionField(props) {
         <div>
             <TextField
                 margin="dense"
+                autoFocus
                 id="question"
                 name="question"
                 onChange={props.inputChanged}

@@ -43,8 +43,8 @@ function AddSurvey(props) {
 
     return (
         <div>
-            <Button variant="contained" style={{ margin: '10px', width: 150, height: 70, fontSize: 20, paddingTop: 5, borderRadius: 10, color: 'white' }} class="btn btn-success" onClick={handleClickOpen}>
-                Add survey
+            <Button variant="contained" style={{ margin: 'auto', width: 100, height: '60%', fontSize: 15, borderRadius: 50 }} class="btn btn-success" onClick={handleClickOpen}>
+                Add
             </Button>
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>Add survey</DialogTitle>
