@@ -29,9 +29,9 @@ function Statistics() {
 
                 data.forEach(answer => {
 
-                    if (!respondentData.includes("Respondent " + answer.respondent.r_id + " : " + answer.respondent.firstname + " " + answer.respondent.lastname)) {
+                    if (!respondentData.includes("Respondent " + answer.respondent.r_id)) {
 
-                        respondentData.push("Respondent " + answer.respondent.r_id + " : " + answer.respondent.firstname + " " + answer.respondent.lastname);
+                        respondentData.push("Respondent " + answer.respondent.r_id);
                     }
 
                     if (!questionData.includes(answer.survey.questions[0].question)) {
@@ -46,6 +46,8 @@ function Statistics() {
                 if (value !== "Initialize") {
 
                     data.forEach(answer => {
+
+                        console.log(answer.survey.questions[0].q_type);
 
                         if (answer.survey.questions[0].q_type !== "Open Question") {
 
