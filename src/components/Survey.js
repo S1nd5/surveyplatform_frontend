@@ -1,75 +1,72 @@
 import React, { useState, useEffect } from 'react';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
-import Button from '@mui/material/Button';
 import LinearProgress from "@mui/material/LinearProgress";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
+import SubmitButton from "./SubmitButton.js";
+import NextButton from "./NextButton.js";
+import Statistics from './Statistics.js';
+import QuestionGenerator from './QuestionGenerator';
+
 import '../css/bootstrap.min.css';
 
 function Survey(props) {
 
-    const [respondent, setRespondent] = useState("");
+    // eslint-disable-next-line
+    const [surveyId, setSurveyId] = useState(props.match.params.surveyId);
+
+    const [currentQuestionId, setCurrentQuestionId] = useState(0);
     const [questions, setQuestions] = useState([]);
 
-    const [surveyId, setSurveyId] = useState(props.match.params.surveyId);
-    const [ansNeeded, setAnsNeeded] = useState(0);
-    const [surveyLength, setSurveyLength] = useState();
+    const [feedBackVisible, setFeedBackVisible] = useState(false);
+    const [isAppReady, setIsAppReady] = useState(false);
 
-    const [ansMap, setAnsMap] = useState([]);
-    const [selectedAns, setSelectedAns] = useState([]);
+    const [progressValue, setProgressValue] = useState(0);
+    // eslint-disable-next-line
+    const [selectedAnswer, setSelectedAnswer] = useState(1);
 
-    const [isVisible, setVisible] = useState(false);
-    const [progValue, setProgValue] = useState(0);
+    const [selectedAnswers, setSelectedAnswers] = useState([]);
+    const [lastAnswer, setLastAnswer] = useState("");
 
-    const [usedAnswer, setUsedAnswer] = useState([]);
-
-    let ansArray = [];
-    let quesArray = [];
     let filteredData = [];
+    let questionsData = [];
+    let sliderValue = ["Täysin samaa mieltä", "Lähes samaa mieltä", "En osaa sanoa", "Lähes eri mieltä", "Täysin eri mieltä"];
 
-    const fetchData = () => {
+    async function fetchData() {
 
-        fetch('https://json.awsproject.link/surveys').then(async response => {
+        //Fetch data related to survey
 
-            try {
+        try {
 
-                //Whole survey data
-                const data = await response.json()
+            const response = await fetch('https://json.awsproject.link/surveys');
 
-                console.log(data.length);
+            const data = await response.json();
 
-                //How many questions there is in this survey
-                setSurveyLength(data.length);
+            for (let a = 0; a < data.length; a++) {
 
-                //Saving surveyId
-                setSurveyId(data[surveyId - 1].s_id);
+                let b = 0;
+                for (b = 0; b < data[a].questions.length; b++) {
 
-                //Radiobutton values
-                ansArray.push(data[0].questions[0].opt1)
-                ansArray.push(data[0].questions[0].opt2)
-                ansArray.push(data[0].questions[0].opt3)
+                    if (data[a].s_id === data[surveyId - 1].s_id) {
 
-                setAnsMap(ansArray);
-
-                //Question values
-                for (let i = 0; i < data[surveyId - 1].questions.length; i++) {
-
-                    quesArray.push(data[surveyId - 1].questions[i].question);
+                        questionsData.push({
+                            name: data[a].name,
+                            q_id: data[a].questions[b].q_id, q_type: data[a].questions[b].q_type, question: data[a].questions[b].question, options: [
+                                data[a].questions[b].opt1, data[a].questions[b].opt2, data[a].questions[b].opt3, data[a].questions[b].opt4]
+                        });
+                    }
                 }
-
-                setQuestions(quesArray);
-
-            } catch (error) {
-                console.error(error)
             }
-        })
+
+            setQuestions(questionsData);
+
+            setIsAppReady(true);
+
+        } catch (error) {
+            console.error(error)
+        }
     }
 
     useEffect(() => {
@@ -78,137 +75,142 @@ function Survey(props) {
         // eslint-disable-next-line
     }, []);
 
-    //Change to next survey
-    const nextPage = () => {
+    //Change to next question
 
-        console.log(surveyLength);
+    const nextQuestion = () => {
 
-        const id = parseInt(props.match.params.surveyId) + 1;
+        if (lastAnswer !== "") {
 
-        if (surveyLength > surveyId) {
+            if (questions.length > (currentQuestionId + 1)) {
 
-            window.location.href = "https://dev.awsproject.link/Survey%20" + id;
+                setCurrentQuestionId(currentQuestionId + 1);
+            }
 
+            if (questions.length === (currentQuestionId + 1)) {
+
+                setIsAppReady(false);
+            }
+
+            setLastAnswer("");
+            setSelectedAnswer(0);
         } else {
 
-            window.alert("This is the last survey.");
+            window.alert("Fill the answer before moving on.");
         }
     }
 
     //Send post request via rest
+
     const postData = () => {
 
-        //Does the answer include everything?
-        if (ansNeeded >= surveyLength) {
-            if (respondent.toString().includes(" ") && respondent.toString().split(" ")[1] !== "") {
+        //Answers in reverse order, so we get the latest choices
 
-                //Answers in reverse order, so we get the latest choices
-                let chars = [];
-                selectedAns.reverse();
+        let chars = [];
+        selectedAnswers.reverse();
 
-                for (let i = 0; i < selectedAns.length; i++) {
+        for (let i = 0; i < selectedAnswers.length; i++) {
 
-                    if (!chars.includes(JSON.stringify(selectedAns[i]).split('"')[1])) {
+            //One answer per question, unless the question type is Checkbox
 
-                        filteredData.push(selectedAns[i]);
-                        chars.push(JSON.stringify(selectedAns[i]).split('"')[1]);
-                    }
-                }
+            if (!chars.includes(JSON.stringify(selectedAnswers[i]).split('"')[1]) || JSON.stringify(selectedAnswers[i]).split(' ')[1].includes("Checkbox")) {
 
-                let data = [];
-
-                filteredData.reverse();
-
-                //Let's assemble data needed for post
-
-                for (let i = 0; i < filteredData.length; i++) {
-
-                    let char = "Q" + (i + 1).toString();
-                    data.push({ survey: { s_id: surveyId.toString() }, question: { q_id: (char.split("Q")[1]).toString() }, answer1: filteredData[i][char], answer2: "", answer3: "", answer4: "" });
-                }
-
-                fetch('https://json.awsproject.link/answers', { method: 'POST', headers: { 'Content-type': 'application/json' }, body: JSON.stringify({ answers: { respondent: respondent, survey: surveyId.toString(), data: data } }) })
-                    .catch(error => console.error(error))
-
-                setVisible(true);
-
-            } else {
-                window.alert("Name has a wrong format.");
+                filteredData.push(selectedAnswers[i]);
+                chars.push(JSON.stringify(selectedAnswers[i]).split('"')[1]);
             }
-
-        } else {
-            window.alert("Answer to all the questions.");
         }
+
+        let data = [];
+
+        filteredData.reverse();
+
+        //Let's assemble data needed for post
+
+        for (let i = 0; i < filteredData.length; i++) {
+
+            if ((JSON.stringify(filteredData[i]).toString()).split(" ")[1] === "Scope") {
+
+                let value = (JSON.stringify(filteredData[i]).toString()).split('":"')[1].split('"}')[0].split(" ")[0];
+
+                data.push({
+                    survey: { s_id: surveyId.toString() }, question: { q_id: (JSON.stringify(filteredData[i]).toString()).split("Q")[1].split("")[0] },
+                    answer1: sliderValue[value - 1], answer2: "", answer3: "", answer4: ""
+                });
+            } else {
+
+                data.push({
+                    survey: { s_id: surveyId.toString() }, question: { q_id: (JSON.stringify(filteredData[i]).toString()).split("Q")[1].split("")[0] },
+                    answer1: (JSON.stringify(filteredData[i]).toString()).split('":"')[1].split('"}')[0].split(" ")[0], answer2: "", answer3: "", answer4: ""
+                });
+            }
+        }
+
+        fetch('https://json.awsproject.link/answers', { method: 'POST', headers: { 'Content-type': 'application/json' }, body: JSON.stringify({ answers: { respondent: "Matti Testaaja", survey: "2", data: data } }) })
+            .catch(error => console.error(error))
+
+        setSelectedAnswers(filteredData);
+        setFeedBackVisible(true);
     }
 
-    //React (pun intended) to changes in radiobutton data
+    //React to changes in answer element data
 
-    const handleChange = (event) => {
+    const handleChange = (event, newValue) => {
 
-        valueAdder(event.target.name);
+        let usedValue = "";
 
-        setAnsNeeded(ansNeeded + 1);
+        setSelectedAnswer(newValue);
 
-        let answer = JSON.parse('{"Q' + (questions.indexOf(event.target.name) + 1).toString() + '":"' + event.target.value + '"}');
+        if (newValue === undefined) {
 
-        setSelectedAns(oldArray => [...oldArray, answer]);
+            usedValue = event.target.value;
+        } else {
+
+            usedValue = newValue;
+        }
+
+        let answer = JSON.parse('{"Q' + questions[currentQuestionId].q_id + '":"' + usedValue + " " + questions[currentQuestionId].q_type + '"}');
+
+        setSelectedAnswers(oldArray => [...oldArray, answer]);
+
+        // Remove unchecked Checkbox answers
+
+        for (let i = 0; i < selectedAnswers.length; i++) {
+
+            if (JSON.stringify(selectedAnswers[i]) === JSON.stringify(answer)) {
+
+                let frontPart = selectedAnswers.slice(0, i);
+                let lastPart = selectedAnswers.slice(i + 1);
+
+                setSelectedAnswers([...frontPart, ...lastPart]);
+            }
+        }
+
+        setLastAnswer(usedValue);
+
+        if (progressValue !== (100 / questions.length * (currentQuestionId + 1)) && progressValue <= 100)
+
+            valueAdder();
     }
 
     //Change progress bar %
 
     const valueAdder = (value) => {
 
-        if (value === 100 / (surveyLength + 1)) {
+        if (value !== 100) {
 
-            setProgValue(progValue - value);
-
-        } else {
-
-            const even = (element) => element === value;
-
-            setUsedAnswer(oldArray => [...oldArray, value])
-
-            if (usedAnswer.some(even) === false && progValue !== 100) {
-
-                setProgValue(progValue + 100 / (surveyLength + 1));
-            }
+            setProgressValue(progressValue + 100 / questions.length);
         }
     }
-
-    //React to changes in respondent data
-
-    const handleRespondent = (event) => {
-
-        setRespondent(event.target.value)
-
-        if (event.target.value.split(" ")[1] !== "" && event.target.value.toString().length > 2) {
-            // eslint-disable-next-line
-            if (respondent !== "" && respondent.includes(" ") && 100 / (surveyLength + 1) + progValue === 100 || progValue === 0 && progValue < 100 / (surveyLength + 1) && respondent !== "" && respondent.includes(" ")) {
-
-                valueAdder(event.target.value);
-            }
-            // eslint-disable-next-line
-            if (!event.target.value.includes(" ") && progValue == 100 || !event.target.value.includes(" ") && progValue == 100 / (surveyLength + 1)) {
-
-                valueAdder(100 / (surveyLength + 1));
-            }
-        }
-    };
 
     //Progress bar
 
     function LinearProgressWithLabel(props) {
         return (
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-                <Box sx={{ width: "100%", mr: 1 }}>
+                <Box style={{ width: '100%', margin: 'auto' }}>
                     <LinearProgress variant="determinate" {...props} />
-                </Box>
-                <Box sx={{ minWidth: 35 }}>
                     <Typography variant="body2" color="text.secondary">{`${Math.round(
                         props.value
                     )}%`}</Typography>
                 </Box>
-            </Box>
         );
     }
 
@@ -219,42 +221,26 @@ function Survey(props) {
 
     return (
 
-        <div style={{ fontFamily: 'Courier New' }}>
-            <LinearProgressWithLabel value={progValue} />
+        <div style={{ fontFamily: 'Courier New', paddingBottom: 50  }}>
+            <LinearProgressWithLabel value={progressValue} />
             <img src="https://i.ibb.co/Npb79BV/logo-2.png" alt="logo" ></img>
-            <div style={{ backgroundColor: 'white', width: 700, margin: 'auto', borderRadius: 10 }}>
-                <h1>Survey {surveyId}</h1>
-                {questions.map((item, key) => (
-                    <div style={{ marginTop: 30 }}>
-                        <FormControl component="fieldset">
-                            <FormLabel component="legend" key={key}>{item}</FormLabel>
-                            <RadioGroup
-                                aria-label="quiz"
-                                name={item}
-                                onChange={handleChange}
+            <div style={{ backgroundColor: 'white', maxWidth: 620, margin: 'auto', borderRadius: 40 }}>
 
-                            >
+                {feedBackVisible ? <div style={{ color: "green", fontSize: 20 }}><i>Success</i><br />{Statistics(selectedAnswers)}</div> :
+                    <div>
+                        {isAppReady ?
+                            <div style={{ marginTop: 30 }}>
+                                <h1>{questions[currentQuestionId].name}</h1>
+                                <QuestionGenerator currentId={currentQuestionId} passValue={questions} handleChange={handleChange} />
 
-                                {ansMap.map((item, key) => (
+                                <NextButton nextQuestion={nextQuestion} />
+                            </div>
+                            : <div><h2>Ready to submit.</h2><SubmitButton postData={postData} /></div>}
+                    </div>}
 
-                                    <FormControlLabel key={key} value={item} control={<Radio />} label={item} />
-                                ))}
-
-                            </RadioGroup>
-
-                        </FormControl>
-
-                    </div>
-                ))}
-                <form>
-                    <input type="text" id="name" name="name" placeholder="E.g. John Smith" onChange={handleRespondent} />
-                </form>
-                <br/>
-                <Link style={{ color: 'white' }} to="/"><button variant="contained" style={{ margin: '10px', width: 150, height: 50, fontSize: 20, paddingTop: 5, borderRadius: 10 }} class="btn btn-primary">Home</button></Link>
-                <Button variant="contained" style={{ margin: '10px', width: 150, height: 50, fontSize: 20, paddingTop: 5, borderRadius: 10 }} class="btn btn-info" onClick={postData}>Submit</Button>
-                <Button variant="contained" style={{ margin: '10px', width: 150, height: 50, fontSize: 20, paddingTop: 5, borderRadius: 10 }} class="btn btn-secondary" onClick={nextPage}>Next</Button>
-                <div style={{ marginTop: 20, color: "green" }}>{isVisible ? <i>Success</i> : null}</div>
+                <Link style={{ color: 'white' }} to="/"><button variant="contained" style={{ margin: '10px', width: 150, height: 50, fontSize: 20, paddingTop: 5, borderRadius: 10 }} className="btn btn-primary">Home</button></Link>
             </div>
+
         </div>
     );
 }

@@ -15,26 +15,23 @@ function Home() {
 
   //Fetching the data needed for Survey buttons on Home page, putting it to useState Hook and mapping it to page later on
 
-  const fetchData = () => {
+  async function fetchData() {
 
-    fetch('https://json.awsproject.link/surveys').then(async response => {
+    try {
 
-      try {
-        const data = await response.json()
+      const response = await fetch('https://json.awsproject.link/surveys');
 
-        for (let i = 0; i < data.length; i++) {
+      const data = await response.json();
 
-          dataArray.push({ addres: "Survey " + (i + 1).toString(), label: data[i].name });
-          //labelArray.push(data[i].name);
-        }
+      for (let i = 0; i < data.length; i++) {
 
-        setDataComponent(dataArray);
-
-      } catch (error) {
-
-        console.error(error)
+        dataArray.push({ address: "Survey" + (i + 1).toString(), label: data[i].name });
       }
-    })
+
+      setDataComponent(dataArray);
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   useEffect(() => {
@@ -47,14 +44,14 @@ function Home() {
 
     <div style={{ fontFamily: 'Courier New' }}>
       <div><Animation /></div>
-      <div style={{ backgroundColor: 'white', width: 600, height: 'auto', margin: 'auto', marginTop: 50, borderRadius: 10 }}>
+      <div style={{ backgroundColor: 'white', maxWidth: 500, margin: 'auto', borderRadius: 40 }}>
         <Box>
           <FormControl component="fieldset" margin='dense'>
             <FormLabel
               component="legend" style={{ fontSize: 40, color: 'black', fontFamily: 'Courier New' }}>Surveys
             </FormLabel>
             {dataComponent.map((item, key) => (
-              <Link style={{ color: 'white' }} to={item.addres} key={key}><button style={{ marginTop: '10px', marginBottom: '10px', width: 'auto', height: 'auto', minHeight: 50, minWidth: 120 }} class="btn btn-primary">{item.label}</button></Link>
+              <Link style={{ color: 'white' }} to={item.address} key={key}><button style={{ marginTop: '10px', marginBottom: '10px', width: 'auto', height: 'auto', minHeight: 50, minWidth: 120 }} className="btn btn-primary">{item.label}</button></Link>
             ))}
           </FormControl>
         </Box>

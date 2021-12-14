@@ -3,10 +3,12 @@ import '../css/logo.png';
 
 function Animation() {
 
+    //Text element animation
+
     return (
 
         <div id="container">
-            Masters of all data
+            Master of all data
             <div id="flip">
                 <div><div>Business</div></div>
                 <div><div>Lifestyle</div></div>
