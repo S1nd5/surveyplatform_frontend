@@ -20,7 +20,11 @@ function Statistics(value) {
 
             if (JSON.stringify(answer).split('":"')[1].split(" ")[1] === "Scope") {
 
-                statisticsData.push({ answer: sliderValue[JSON.stringify(answer).split('":"')[1].split(" ")[0] - 1], incidence: 1 });
+                let i = parseInt(JSON.stringify(answer).split('":"')[1].split(" ")[0]) - 1;
+
+                console.log(i);
+
+                statisticsData.push({ answer: sliderValue[i], incidence: 1 });
             } else {
 
                 statisticsData.push({ answer: JSON.stringify(answer).split('":"')[1].split(" ")[0], incidence: 1 });
