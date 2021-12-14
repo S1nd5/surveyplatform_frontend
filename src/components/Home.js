@@ -44,7 +44,7 @@ function Home() {
 
     <div style={{ fontFamily: 'Courier New' }}>
       <div><Animation /></div>
-      <div style={{ backgroundColor: 'white', width: 600, height: 'auto', margin: 'auto', marginTop: 50, borderRadius: 10 }}>
+      <div style={{ backgroundColor: 'white', maxWidth: 500, margin: 'auto', borderRadius: 40 }}>
         <Box>
           <FormControl component="fieldset" margin='dense'>
             <FormLabel

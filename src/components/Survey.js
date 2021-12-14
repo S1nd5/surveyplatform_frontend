@@ -205,16 +205,12 @@ function Survey(props) {
 
     function LinearProgressWithLabel(props) {
         return (
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-                <Box sx={{ width: "100%", mr: 1 }}>
+                <Box style={{ width: '50%', margin: 'auto' }}>
                     <LinearProgress variant="determinate" {...props} />
-                </Box>
-                <Box sx={{ minWidth: 35 }}>
                     <Typography variant="body2" color="text.secondary">{`${Math.round(
                         props.value
                     )}%`}</Typography>
                 </Box>
-            </Box>
         );
     }
 
@@ -225,16 +221,16 @@ function Survey(props) {
 
     return (
 
-        <div style={{ fontFamily: 'Courier New' }}>
+        <div style={{ fontFamily: 'Courier New', paddingBottom: 50  }}>
             <LinearProgressWithLabel value={progressValue} />
             <img src="https://i.ibb.co/Npb79BV/logo-2.png" alt="logo" ></img>
-            <div style={{ backgroundColor: 'white', width: 1000, margin: 'auto', borderRadius: 10 }}>
+            <div style={{ backgroundColor: 'white', width: 800, margin: 'auto', borderRadius: 40 }}>
 
-                {feedBackVisible ? <div style={{ marginTop: 20, color: "green", fontSize: 20 }}><i>Success</i><br />{Statistics(selectedAnswers)}</div> :
+                {feedBackVisible ? <div style={{ color: "green", fontSize: 20 }}><i>Success</i><br />{Statistics(selectedAnswers)}</div> :
                     <div>
                         {isAppReady ?
                             <div style={{ marginTop: 30 }}>
-                                <h1>Survey {questions[currentQuestionId].name}</h1>
+                                <h1>{questions[currentQuestionId].name}</h1>
                                 <QuestionGenerator currentId={currentQuestionId} passValue={questions} handleChange={handleChange} />
 
                                 <NextButton nextQuestion={nextQuestion} />
@@ -243,7 +239,8 @@ function Survey(props) {
                     </div>}
 
                 <Link style={{ color: 'white' }} to="/"><button variant="contained" style={{ margin: '10px', width: 150, height: 50, fontSize: 20, paddingTop: 5, borderRadius: 10 }} className="btn btn-primary">Home</button></Link>
-            </div >
+            </div>
+
         </div>
     );
 }

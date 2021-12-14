@@ -87,7 +87,7 @@ function QuestionGenerator(props) {
                 )
             } else if (value[i].q_type === "Scope 1 to 5") {
 
-                options.push(<div style={{ width: 700, margin: 'auto' }}>
+                options.push(<div style={{ width: 600, margin: 'auto' }}>
                     <label>{value[i].question}</label><br />
                     <Slider defaultValue={3} step={1} marks={marks} min={1} max={5} name="Scope" onChange={props.handleChange} />
                 </div>

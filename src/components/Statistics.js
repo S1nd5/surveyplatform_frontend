@@ -49,7 +49,7 @@ function Statistics(value) {
 
     return (
         <div>
-            <BarChart width={1000} height={400} data={filteredData[0]}>
+            <BarChart width={800} height={400} data={filteredData[0]}>
                 <XAxis dataKey="answer" />
                 <YAxis dataKey="incidence" />
                 <Tooltip />
