@@ -48,8 +48,8 @@ function Statistics(value) {
     }
 
     return (
-        <div>
-            <BarChart width={800} height={400} data={filteredData[0]}>
+        <div style={{ margin: 'auto'}}>
+            <BarChart width={600} height={300} data={filteredData[0]}>
                 <XAxis dataKey="answer" />
                 <YAxis dataKey="incidence" />
                 <Tooltip />

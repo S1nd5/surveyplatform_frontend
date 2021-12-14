@@ -205,7 +205,7 @@ function Survey(props) {
 
     function LinearProgressWithLabel(props) {
         return (
-                <Box style={{ width: '50%', margin: 'auto' }}>
+                <Box style={{ width: '100%', margin: 'auto' }}>
                     <LinearProgress variant="determinate" {...props} />
                     <Typography variant="body2" color="text.secondary">{`${Math.round(
                         props.value
@@ -224,7 +224,7 @@ function Survey(props) {
         <div style={{ fontFamily: 'Courier New', paddingBottom: 50  }}>
             <LinearProgressWithLabel value={progressValue} />
             <img src="https://i.ibb.co/Npb79BV/logo-2.png" alt="logo" ></img>
-            <div style={{ backgroundColor: 'white', width: 800, margin: 'auto', borderRadius: 40 }}>
+            <div style={{ backgroundColor: 'white', maxWidth: 620, margin: 'auto', borderRadius: 40 }}>
 
                 {feedBackVisible ? <div style={{ color: "green", fontSize: 20 }}><i>Success</i><br />{Statistics(selectedAnswers)}</div> :
                     <div>

@@ -22,23 +22,23 @@ function QuestionGenerator(props) {
         const marks = [
             {
                 value: 1,
-                label: 'Täysin samaa mieltä'
+                label: '1'
             },
             {
                 value: 2,
-                label: 'Lähes samaa mieltä'
+                label: '2'
             },
             {
                 value: 3,
-                label: 'En osaa sanoa'
+                label: '3'
             },
             {
                 value: 4,
-                label: 'Lähes eri mieltä'
+                label: '4'
             },
             {
                 value: 5,
-                label: 'Täysin eri mieltä',
+                label: '5',
             },
         ];
 
@@ -87,9 +87,10 @@ function QuestionGenerator(props) {
                 )
             } else if (value[i].q_type === "Scope 1 to 5") {
 
-                options.push(<div style={{ width: 600, margin: 'auto' }}>
+                options.push(<div style={{ maxWidth: 400, margin: 'auto' }}>
                     <label>{value[i].question}</label><br />
                     <Slider defaultValue={3} step={1} marks={marks} min={1} max={5} name="Scope" onChange={props.handleChange} />
+                    <p>1 = Täysin samaa mieltä <br /> 2 = Lähes samaa mieltä <br /> 3 = En osaa sanoa <br /> 4 = Lähes eri mieltä <br /> 5 = Täysin eri mieltä</p>
                 </div>
                 )
             } else {
