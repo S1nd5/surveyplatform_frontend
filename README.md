@@ -1,4 +1,4 @@
-# Surveyplatform project
+# Survey platform project
 
 - Survey platform with different question types: radio, checkbox, open question and scale 1 to 5.
   - [Main page](https://awsproject.link).
